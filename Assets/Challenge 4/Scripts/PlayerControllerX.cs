@@ -9,8 +9,10 @@ public class PlayerControllerX : MonoBehaviour
     private GameObject focalPoint;
 
     public bool hasPowerup;
+    public bool doubleSpeed = false;
     public GameObject powerupIndicator;
     public int powerUpDuration = 5;
+    public ParticleSystem explosionParticle;
 
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
@@ -30,6 +32,19 @@ public class PlayerControllerX : MonoBehaviour
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
 
+        // Add the player a turbo boost and particle effect
+        if (Input.GetKey(KeyCode.Space))
+        {
+            doubleSpeed = true;
+            playerRb.AddForce(focalPoint.transform.forward, ForceMode.Impulse);
+            explosionParticle.Play();
+        }
+        else if (doubleSpeed)
+        {
+            doubleSpeed = false;
+            playerRb.AddForce(focalPoint.transform.forward, ForceMode.Impulse);
+            explosionParticle.Stop();
+        }
     }
 
     // If Player collides with powerup, activate powerup
